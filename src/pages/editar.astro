@@ -1,0 +1,254 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/flight-plan.css';
+---
+<BaseLayout
+  title="Editar plan de vuelo — Aerodot"
+  description="Completá el plan de vuelo y bajá el PDF."
+>
+  <SiteHeader />
+  <main class="fp-page" id="main-content" tabindex="-1">
+    <a class="back-link" href="/">← Planes</a>
+    <section class="fp-intro">
+      <p class="eyebrow">Formulario</p>
+      <h1 id="fp-title">Plan de vuelo</h1>
+      <p class="fp-note">Los cambios se guardan solos en este navegador. El PDF usa la hoja del plan de vuelo y tacha las casillas que no marcaste.</p>
+    </section>
+
+    <div class="fp-empty" id="fp-missing" hidden>
+      <p>Ese plan no está en este navegador.</p>
+      <a class="button-primary" href="/">Volver a los planes</a>
+    </div>
+
+    <form class="fp-form" id="fp-form" autocomplete="off" novalidate>
+      <fieldset class="fp-group">
+        <legend>La aeronave</legend>
+        <div class="fp-grid">
+          <div class="fp-field">
+            <label for="fecha">Fecha del vuelo</label>
+            <input id="fecha" name="fecha" type="date" required>
+          </div>
+          <div class="fp-field">
+            <label for="identificacion">Identificación</label>
+            <input id="identificacion" name="identificacion" maxlength="7" autocapitalize="characters" spellcheck="false" placeholder="LV-DEM">
+            <span class="fp-hint">Matrícula, casilla 7.</span>
+          </div>
+          <div class="fp-field">
+            <label for="numero">Número</label>
+            <input id="numero" name="numero" inputmode="numeric" maxlength="2" value="1">
+          </div>
+          <div class="fp-field">
+            <label for="tipoAeronave">Tipo</label>
+            <input id="tipoAeronave" name="tipoAeronave" maxlength="4" autocapitalize="characters" spellcheck="false" placeholder="C172">
+            <span class="fp-hint">Designador OACI.</span>
+          </div>
+          <div class="fp-field">
+            <label for="equipo">Equipo COM/NAV</label>
+            <input id="equipo" name="equipo" maxlength="20" autocapitalize="characters" spellcheck="false" value="S">
+          </div>
+          <div class="fp-field">
+            <label for="transponder">Transponder</label>
+            <input id="transponder" name="transponder" maxlength="10" autocapitalize="characters" spellcheck="false" value="S">
+          </div>
+        </div>
+        <fieldset class="fp-choices">
+          <legend>Reglas de vuelo</legend>
+          <label><input type="radio" name="reglas" value="V" checked> VFR</label>
+          <label><input type="radio" name="reglas" value="I"> IFR</label>
+          <label><input type="radio" name="reglas" value="Y"> IFR y después VFR</label>
+          <label><input type="radio" name="reglas" value="Z"> VFR y después IFR</label>
+        </fieldset>
+        <fieldset class="fp-choices">
+          <legend>Tipo de vuelo</legend>
+          <label><input type="radio" name="tipoVuelo" value="G" checked> General</label>
+          <label><input type="radio" name="tipoVuelo" value="N"> No regular</label>
+          <label><input type="radio" name="tipoVuelo" value="S"> Regular</label>
+          <label><input type="radio" name="tipoVuelo" value="M"> Militar</label>
+          <label><input type="radio" name="tipoVuelo" value="X"> Otro</label>
+        </fieldset>
+        <fieldset class="fp-choices">
+          <legend>Estela</legend>
+          <label><input type="radio" name="estela" value="L" checked> Ligera</label>
+          <label><input type="radio" name="estela" value="M"> Media</label>
+          <label><input type="radio" name="estela" value="H"> Pesada</label>
+          <label><input type="radio" name="estela" value="J"> Super</label>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="fp-group">
+        <legend>La ruta</legend>
+        <div class="fp-grid">
+          <div class="fp-field">
+            <label for="salida">Salida</label>
+            <input id="salida" name="salida" maxlength="4" pattern="(|[A-Za-z0-9]{4})" autocapitalize="characters" spellcheck="false" placeholder="SADF">
+            <span class="fp-error">Cuatro caracteres, como SADF.</span>
+          </div>
+          <div class="fp-field">
+            <label for="eobt">Hora de salida</label>
+            <input id="eobt" name="eobt" inputmode="numeric" maxlength="4" pattern="(|\d{4})" spellcheck="false" placeholder="1500">
+            <span class="fp-hint">Hora UTC, cuatro cifras.</span>
+            <span class="fp-error">Cuatro cifras, como 1500.</span>
+          </div>
+          <div class="fp-field">
+            <label for="velocidad">Velocidad</label>
+            <input id="velocidad" name="velocidad" maxlength="5" autocapitalize="characters" spellcheck="false" placeholder="N0090">
+            <span class="fp-hint">Nudos con N, o kilómetros con K.</span>
+          </div>
+          <div class="fp-field">
+            <label for="nivel">Nivel</label>
+            <input id="nivel" name="nivel" maxlength="5" autocapitalize="characters" spellcheck="false" placeholder="A015">
+            <span class="fp-hint">Altitud con A, nivel de vuelo con F, o VFR.</span>
+          </div>
+          <div class="fp-field fp-span">
+            <label for="ruta">Ruta</label>
+            <input id="ruta" name="ruta" maxlength="80" autocapitalize="characters" spellcheck="false" value="DCT">
+          </div>
+          <div class="fp-field">
+            <label for="destino">Destino</label>
+            <input id="destino" name="destino" maxlength="4" pattern="(|[A-Za-z0-9]{4})" autocapitalize="characters" spellcheck="false" placeholder="SABE">
+            <span class="fp-error">Cuatro caracteres, como SABE.</span>
+          </div>
+          <div class="fp-field">
+            <label for="ete">Tiempo total</label>
+            <input id="ete" name="ete" inputmode="numeric" maxlength="4" pattern="(|\d{4})" spellcheck="false" placeholder="0015">
+            <span class="fp-hint">Horas y minutos, cuatro cifras.</span>
+            <span class="fp-error">Cuatro cifras, como 0015.</span>
+          </div>
+          <div class="fp-field">
+            <label for="alt1">Alternativa</label>
+            <input id="alt1" name="alt1" maxlength="4" pattern="(|[A-Za-z0-9]{4})" autocapitalize="characters" spellcheck="false">
+            <span class="fp-error">Vacío, o cuatro caracteres.</span>
+          </div>
+          <div class="fp-field">
+            <label for="alt2">Segunda alternativa</label>
+            <input id="alt2" name="alt2" maxlength="4" pattern="(|[A-Za-z0-9]{4})" autocapitalize="characters" spellcheck="false">
+            <span class="fp-error">Vacío, o cuatro caracteres.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fp-group">
+        <legend>Otros datos</legend>
+        <div class="fp-grid">
+          <div class="fp-field">
+            <label for="opr">Operador</label>
+            <input id="opr" name="opr" maxlength="20" autocapitalize="characters" spellcheck="false">
+          </div>
+          <div class="fp-field">
+            <label for="per">Performance</label>
+            <select id="per" name="per">
+              <option value="A" selected>A · menos de 91 kt</option>
+              <option value="B">B · 91 a 120 kt</option>
+              <option value="C">C · 121 a 140 kt</option>
+              <option value="D">D · 141 a 165 kt</option>
+              <option value="E">E · más de 165 kt</option>
+              <option value="H">H · helicóptero</option>
+            </select>
+          </div>
+          <div class="fp-field fp-span">
+            <label for="otra">Texto extra de la casilla 18</label>
+            <textarea id="otra" name="otra" maxlength="80" autocapitalize="characters" spellcheck="false"></textarea>
+            <span class="fp-hint">La fecha, el operador y la performance se agregan solos.</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="fp-group">
+        <legend>A bordo</legend>
+        <div class="fp-grid">
+          <div class="fp-field">
+            <label for="autonomia">Autonomía</label>
+            <input id="autonomia" name="autonomia" inputmode="numeric" maxlength="4" pattern="(|\d{4})" spellcheck="false" placeholder="0300">
+            <span class="fp-error">Vacío, o cuatro cifras.</span>
+          </div>
+          <div class="fp-field">
+            <label for="personas">Personas a bordo</label>
+            <input id="personas" name="personas" inputmode="numeric" maxlength="3" value="1">
+          </div>
+          <div class="fp-field">
+            <label for="color">Color y marcas</label>
+            <input id="color" name="color" maxlength="40" autocapitalize="characters" spellcheck="false" placeholder="BLANCA">
+          </div>
+          <div class="fp-field">
+            <label for="piloto">Piloto al mando</label>
+            <input id="piloto" name="piloto" maxlength="40" autocapitalize="characters" spellcheck="false">
+          </div>
+          <div class="fp-field fp-span">
+            <label for="observaciones">Observaciones</label>
+            <input id="observaciones" name="observaciones" maxlength="80" autocapitalize="characters" spellcheck="false">
+          </div>
+        </div>
+        <fieldset class="fp-checks">
+          <legend>Radio de emergencia</legend>
+          <label class="fp-check"><input type="checkbox" name="radioU"> UHF</label>
+          <label class="fp-check"><input type="checkbox" name="radioV"> VHF</label>
+          <label class="fp-check"><input type="checkbox" name="radioE"> ELT</label>
+        </fieldset>
+        <fieldset class="fp-checks">
+          <legend>Supervivencia</legend>
+          <label class="fp-check"><input type="checkbox" name="supS"> Lleva equipo</label>
+          <label class="fp-check"><input type="checkbox" name="supP"> Polar</label>
+          <label class="fp-check"><input type="checkbox" name="supD"> Desierto</label>
+          <label class="fp-check"><input type="checkbox" name="supM"> Marítimo</label>
+          <label class="fp-check"><input type="checkbox" name="supJ"> Selva</label>
+        </fieldset>
+        <fieldset class="fp-checks">
+          <legend>Chalecos</legend>
+          <label class="fp-check"><input type="checkbox" name="chaJ"> Lleva</label>
+          <label class="fp-check"><input type="checkbox" name="chaL"> Luz</label>
+          <label class="fp-check"><input type="checkbox" name="chaF"> Fluorescente</label>
+          <label class="fp-check"><input type="checkbox" name="chaU"> UHF</label>
+          <label class="fp-check"><input type="checkbox" name="chaV"> VHF</label>
+        </fieldset>
+        <fieldset class="fp-checks">
+          <legend>Balsas</legend>
+          <label class="fp-check"><input type="checkbox" name="balsaD"> Lleva</label>
+          <label class="fp-check"><input type="checkbox" name="balsaC"> Con cubierta</label>
+        </fieldset>
+        <div class="fp-grid">
+          <div class="fp-field">
+            <label for="balsaNumero">Cantidad de balsas</label>
+            <input id="balsaNumero" name="balsaNumero" inputmode="numeric" maxlength="2">
+          </div>
+          <div class="fp-field">
+            <label for="balsaCapacidad">Capacidad</label>
+            <input id="balsaCapacidad" name="balsaCapacidad" inputmode="numeric" maxlength="3">
+          </div>
+          <div class="fp-field">
+            <label for="balsaColor">Color de las balsas</label>
+            <input id="balsaColor" name="balsaColor" maxlength="20" autocapitalize="characters" spellcheck="false">
+          </div>
+        </div>
+        <div class="fp-sign">
+          <span id="fp-sign-label">Firma del piloto</span>
+          <canvas id="fp-sign" aria-labelledby="fp-sign-label"></canvas>
+          <button class="button-quiet" id="fp-sign-clear" type="button">Borrar firma</button>
+        </div>
+      </fieldset>
+
+      <div class="fp-bar">
+        <p class="fp-status" id="fp-status" aria-live="polite"></p>
+        <button class="button-quiet" id="fp-delete-open" type="button">Eliminar</button>
+        <button class="button-primary" id="fp-pdf" type="button">Descargar PDF</button>
+      </div>
+    </form>
+  </main>
+  <dialog class="fp-dialog" id="fp-delete">
+    <form method="dialog">
+      <h2>Eliminar este plan</h2>
+      <p>Se borra de este navegador.</p>
+      <div class="fp-dialog-actions">
+        <button class="button-quiet" type="submit" value="cancel">Cancelar</button>
+        <button class="button-primary" type="submit" value="confirm">Eliminar</button>
+      </div>
+    </form>
+  </dialog>
+  <footer class="home-footer">
+    <span>El PDF no se envía a ninguna dependencia.</span>
+    <a href="https://aerodot.app">Volver a Aerodot</a>
+  </footer>
+  <script>
+    import '../scripts/flight-plan-editor.js';
+  </script>
+</BaseLayout>

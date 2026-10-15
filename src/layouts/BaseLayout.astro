@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const siteOrigin = (Astro.site ? Astro.site.toString() : 'https://aerodot-plan.vercel.app').replace(/\/$/, '');
+const canonicalURL = new URL(Astro.url.pathname, siteOrigin).href;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1b1a18" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script is:inline>
+      (() => {
+        try {
+          const saved = localStorage.getItem('aerodot:theme');
+          document.documentElement.dataset.theme = saved === 'light' ? 'light' : 'dark';
+        } catch {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+    <title>{title}</title>
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main-content">Saltar al contenido</a>
+    <slot />
+    <a class="back-to-top" href="#top" aria-label="Volver arriba">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg>
+    </a>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const controls = document.querySelectorAll('.ld-dn');
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const update = (theme) => {
+          const isNight = theme !== 'light';
+          root.dataset.theme = isNight ? 'dark' : 'light';
+          controls.forEach((control) => {
+            control.setAttribute('aria-checked', String(isNight));
+            const label = isNight ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+            control.setAttribute('aria-label', label);
+          });
+          if (themeColor) themeColor.setAttribute('content', isNight ? '#1b1a18' : '#fdfcfc');
+        };
+        update(root.dataset.theme || 'dark');
+        controls.forEach((control) => control.addEventListener('click', () => {
+          const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          update(next);
+          try { localStorage.setItem('aerodot:theme', next); } catch { /* sigue en esta visita */ }
+        }));
+        const top = document.querySelector('.back-to-top');
+        const onScroll = () => top?.classList.toggle('is-visible', window.scrollY > 320);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      })();
+    </script>
+  </body>
+</html>

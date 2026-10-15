@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/flight-plan.css';
+---
+<BaseLayout
+  title="Plan de vuelo — Aerodot"
+  description="Armá un plan de vuelo, guardalo en este navegador y bajá el PDF para presentarlo."
+>
+  <SiteHeader />
+  <main class="fp-page" id="main-content" tabindex="-1">
+    <a class="back-link" href="https://aerodot.app">← Aerodot</a>
+    <section class="fp-intro">
+      <p class="eyebrow">En este navegador</p>
+      <h1>Plan de vuelo</h1>
+      <p>Completá el formulario, guardalo y bajá el PDF. Los planes quedan en este dispositivo.</p>
+      <p class="fp-note">Herramienta independiente. Aerodot no presenta el plan ante nadie. Revisá los datos antes de llevarlo.</p>
+    </section>
+    <div class="fp-actions">
+      <a class="button-primary" href="/editar?id=nuevo">Nuevo plan</a>
+    </div>
+    <p class="fp-empty" id="fp-empty">Todavía no hay planes guardados.</p>
+    <ul class="fp-list" id="fp-list" hidden></ul>
+    <p class="fp-status" id="fp-status" aria-live="polite"></p>
+  </main>
+  <dialog class="fp-dialog" id="fp-delete">
+    <form method="dialog">
+      <h2>Eliminar este plan</h2>
+      <p>Se borra de este navegador.</p>
+      <div class="fp-dialog-actions">
+        <button class="button-quiet" type="submit" value="cancel">Cancelar</button>
+        <button class="button-primary" type="submit" value="confirm">Eliminar</button>
+      </div>
+    </form>
+  </dialog>
+  <footer class="home-footer">
+    <span>Los planes no salen de este navegador.</span>
+    <a href="https://aerodot.app">Volver a Aerodot</a>
+  </footer>
+  <script>
+    import '../scripts/flight-plan-list.js';
+  </script>
+</BaseLayout>

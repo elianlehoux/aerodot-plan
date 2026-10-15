@@ -1,0 +1,13 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+---
+<header class="site-header">
+  <a class="wordmark" href="https://aerodot.app" aria-label="Aerodot, ir a la biblioteca">
+    <img src="/logo.png" alt="" class="wordmark-icon" width="28" height="28" />
+    <span class="wordmark-name">aerodot</span><span class="wordmark-dot" aria-hidden="true">.</span>
+  </a>
+  <nav aria-label="Navegación">
+    <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Planes</a>
+    <ThemeToggle />
+  </nav>
+</header>
